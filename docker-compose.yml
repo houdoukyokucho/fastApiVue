@@ -1,0 +1,27 @@
+version: '3'
+services:
+  web:
+    build: .
+    tty: true
+    working_dir: /project
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/project
+      - /project/frontend/node_modules
+    depends_on:
+      - db
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: database_name
+      MYSQL_USER: user_name
+      MYSQL_PASSWORD: user_password
+      MYSQL_ROOT_PASSWORD: root_user_password
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ./mysql:/var/lib/mysql
+      - ./database/my.cnf:/etc/mysql/conf.d/my.cnf
+    ports:
+      - 33306:3306
